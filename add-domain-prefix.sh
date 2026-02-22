@@ -22,8 +22,13 @@ for file in "$FOLDER"/*.txt; do
     if [ -f "$file" ]; then
         echo "Processing: $file"
         
-        # Add "domain:" prefix to non-empty lines and save to a temp file
-        sed '/^[[:space:]]*$/!s/^/domain:/' "$file" > "$file.tmp"
+        # Add "domain:" prefix only to non-empty lines that do NOT already
+        # start with a prefix (a token followed by a colon), and save to a temp file.
+        awk '
+        /^[[:space:]]*$/ { print; next }
+        /^[[:space:]]*[^[:space:]]+:/ { print; next }
+        { print "domain:" $0 }
+        ' "$file" > "$file.tmp"
         
         # Replace original file with the modified version
         mv "$file.tmp" "$file"
