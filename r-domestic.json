@@ -1,0 +1,91 @@
+{
+  "Name": "r-domestic",
+  "GlobalProxy": "false",
+  "RouteOrder": "block-proxy-direct",
+  "RemoteDNSType": "DoU",
+  "RemoteDNSDomain": "https://cloudflare-dns.com/dns-query",
+  "RemoteDNSIP": "8.8.8.8",
+  "DomesticDNSType": "DoU",
+  "DomesticDNSDomain": "https://dns.google/dns-query",
+  "DomesticDNSIP": "8.8.8.8",
+  "Geoipurl": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
+  "Geositeurl": "https://raw.githubusercontent.com/Dmitriy9000/russia-minimal-geosite/main/geosite.dat",
+  "LastUpdated": "",
+  "DnsHosts": {
+    "cloudflare-dns.com": "1.1.1.1",
+    "dns.google": "8.8.8.8"
+  },
+  "DirectSites": [
+    "geosite:ru-available-only-inside", 
+    "geosite:apple", 
+    "geosite:microsoft", 
+    "geosite:steam", 
+    "geosite:category-games", 
+    "geosite:category-ru", 
+    "geosite:reddit"
+  ],
+  "DirectIp": [],
+  "ProxySites": [
+    "geosite:ru-blocked", 
+    "geosite:category-ai-!cn", 
+    "geosite:category-ai-chat-!cn", 
+    "geosite:category-cryptocurrency", 
+    "geosite:cursor", 
+    "geosite:forza", 
+    "geosite:piratebay", 
+    "geosite:roblox", 
+    "geosite:rutracker"
+  ],
+  "ProxyIp": [],
+  "BlockSites": [
+    "geosite:category-ads-all"
+  ],
+  "BlockIp": [],
+  "DomainStrategy": "IPIfNonMatch",
+  "FakeDNS": "true",
+  "UseChunkFiles": "true"
+}
+
+
+
+OLD CONFIG:
+{
+  "Name": "MyRussia5",
+  "GlobalProxy": "true",
+  "RouteOrder": "block-direct-proxy",
+  "RemoteDNSType": "DoU",
+  "RemoteDNSDomain": "https://cloudflare-dns.com/dns-query",
+  "RemoteDNSIP": "8.8.8.8",
+  "DomesticDNSType": "DoU",
+  "DomesticDNSDomain": "https://dns.google/dns-query",
+  "DomesticDNSIP": "8.8.8.8",
+  "Geoipurl": "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat",
+  "Geositeurl": "https://raw.githubusercontent.com/runetfreedom/russia-blocked-geosite/release/geosite.dat",
+  "LastUpdated": "1769330613",
+  "DnsHosts": {
+    "cloudflare-dns.com": "1.1.1.1",
+    "dns.google": "8.8.8.8"
+  },
+  "DirectSites": [
+    "geosite:ru-available-only-inside"
+  ],
+  "DirectIp": [
+    "10.0.0.0/8",
+    "172.16.0.0/12",
+    "192.168.0.0/16",
+    "169.254.0.0/16",
+    "224.0.0.0/4",
+    "255.255.255.255"
+  ],
+  "ProxySites": [
+    "geosite:ru-blocked"
+  ],
+  "ProxyIp": [],
+  "BlockSites": [
+    "geosite:category-ads-all"
+  ],
+  "BlockIp": [],
+  "DomainStrategy": "IPIfNonMatch",
+  "FakeDNS": "true",
+  "UseChunkFiles": "true"
+}

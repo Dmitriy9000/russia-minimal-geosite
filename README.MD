@@ -52,22 +52,3 @@ Make sure the resulting binary is in your PATH or note its location for use in b
   - Build: `./domain-list-community --datapath=./categories`
 
 If you want `append-enrich-to-categories.sh` or `add-domain-prefix.sh` to target different directories, pass them as positional arguments (see the scripts' usage comments).
-
-## Routing Strategy
-
-### For massive VPN user base (inside Russia)
-Ads => Block
-Blocked in Russia => VPN
-Everything else => Direct
-
-### For personal device with access to foreign banks and services (inside Russia)
-Ads => Block
-Blocked in Russia => VPN
-"geosite:apple", "geosite:microsoft", "geosite:steam", "geosite:category-games" => Direct
-Available only in Russia => Direct
-Ru => Direct
-Everything else => VPN
-
-## Happ profiles
-
-TODO
