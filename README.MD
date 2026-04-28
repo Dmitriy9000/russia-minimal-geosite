@@ -1,6 +1,46 @@
+# Russia Minimal Geosite
+
+A builder for a minimal `geosite.dat` routing database for Russian users. It downloads the upstream [russia-blocked-geosite](https://github.com/runetfreedom/russia-blocked-geosite) dataset, extracts only the categories you need, enriches them with extra hand-curated domains, and repackages everything into a compact binary ready for V2Ray-compatible clients.
+
+The resulting `geosite.dat` is committed to this repository so you can consume it directly without running the build pipeline yourself.
+
+## Use case
+
+Russian users who route internet traffic through a proxy need routing rules that:
+
+- Send **Russian services** (Yandex, VK, Tinkoff, …) **directly** — avoids latency and geo-blocks on domestic services
+- Send **blocked or restricted sites** through the proxy
+- **Block** ad networks
+
+This project provides both the `geosite.dat` database and a ready-made `r-domestic.json` config for clients that support this format (e.g. [NekoBox](https://github.com/MatsuriDayo/NekoBoxForAndroid)).
+
+## Categories included
+
+| Tag | Routing | Description |
+|-----|---------|-------------|
+| `ru-available-only-inside` | Direct | Russian services best accessed without a proxy (Yandex, VK, Tinkoff, etc.) |
+| `category-ru` | Direct | Russian-language / Russia-registered domains |
+| `apple` | Direct | Apple services |
+| `microsoft` | Direct | Microsoft services |
+| `steam` | Direct | Steam |
+| `category-games` | Direct | Game platforms |
+| `reddit` | Direct | Reddit |
+| `ru-blocked` | Proxy | Sites blocked in Russia |
+| `category-ai-!cn` | Proxy | AI services (excluding China) |
+| `category-ai-chat-!cn` | Proxy | AI chat services (excluding China) |
+| `category-cryptocurrency` | Proxy | Crypto exchanges and tools |
+| `cursor` | Proxy | Cursor IDE |
+| `forza` | Proxy | Forza Horizon |
+| `piratebay` | Proxy | The Pirate Bay |
+| `roblox` | Proxy | Roblox |
+| `rutracker` | Proxy | RuTracker |
+| `category-ads-all` | Block | Ad networks |
+
+Custom domains in `enrich/ru-available-only-inside` and `enrich/ru-blocked` are merged into the corresponding categories at build time.
+
 ## Prerequisites
 
-This project requires Go and two build tools. Follow the instructions below to set up your environment.
+This project requires Go and two build tools.
 
 ### Install Go
 
@@ -8,7 +48,7 @@ Download and install Go from [https://golang.org/dl/](https://golang.org/dl/). M
 
 ### Install domain-list-community
 
-Clone and build the domain-list-community tool:
+Clone and build the `domain-list-community` tool:
 
 ```bash
 git clone https://github.com/v2fly/domain-list-community.git
@@ -16,11 +56,11 @@ cd domain-list-community
 go build -o domain-list-community ./
 ```
 
-Make sure the resulting binary is in your PATH or note its location for use in build commands.
+Place the resulting binary in your PATH or in the repository root.
 
 ### Install v2dat
 
-Clone and build the v2dat tool:
+Clone and build the `v2dat` tool:
 
 ```bash
 git clone https://github.com/urlesistiana/v2dat.git
@@ -28,27 +68,53 @@ cd v2dat
 go build -o v2dat ./
 ```
 
-Make sure the resulting binary is in your PATH or note its location for use in build commands.
+Place the resulting binary in your PATH or in the repository root.
 
-```
+## Build
 
-**Using Minimize Script**
-
-- **Purpose:** Runs the full pipeline to download, extract, enrich, prefix and rebuild a minimized `geosite.dat` containing only the Russian-related sections used by this project.
-- **Prerequisites:** Ensure the tools listed above are installed and available in your `PATH`: `v2dat`, `domain-list-community`, and `curl`. The repository scripts `append-enrich-to-categories.sh` and `add-domain-prefix.sh` must be executable.
-- **Run:** From the repository root run:
+Run the full pipeline from the repository root:
 
 ```bash
 ./minimize.sh
 ```
 
-- **What it does:** `minimize.sh` downloads the latest `geosite.dat`, extracts only the sections this project needs into `./categories`, enriches those category files from `./enrich`, adds the `domain:` prefix where needed, and rebuilds a minimized `geosite.dat` in the repository root.
-- **Output:** `geosite.dat` produced in the repo root (the script renames `dlc.dat` to `geosite.dat`).
-- **Customize / Run steps individually:** If you prefer to run parts manually:
+This downloads the latest `geosite.dat` from upstream, extracts the needed sections into `./categories`, enriches them from `./enrich`, adds the `domain:` prefix where needed, and rebuilds a minimized `geosite.dat` in the repository root.
 
-  - Extract: `./v2dat unpack geosite -o extracted geosite.dat`
-  - Enrich: `./append-enrich-to-categories.sh [enrich_dir] [categories_dir]`
-  - Add prefix: `./add-domain-prefix.sh ./categories`
-  - Build: `./domain-list-community --datapath=./categories`
+### Run steps individually
 
-If you want `append-enrich-to-categories.sh` or `add-domain-prefix.sh` to target different directories, pass them as positional arguments (see the scripts' usage comments).
+```bash
+# Extract sections from the downloaded geosite.dat
+./v2dat unpack geosite -o extracted geosite.dat
+
+# Enrich category files with extra domains
+./append-enrich-to-categories.sh [enrich_dir] [categories_dir]
+
+# Add domain: prefix
+./add-domain-prefix.sh ./categories
+
+# Rebuild the .dat file
+./domain-list-community --datapath=./categories
+```
+
+## Customise
+
+To add your own domains:
+
+- **Direct** — add them to `enrich/ru-available-only-inside`, one domain per line
+- **Proxy** — add them to `enrich/ru-blocked`, one domain per line
+
+Lines are automatically deduplicated and merged with the upstream category at build time. You can use any prefix supported by `domain-list-community`, for example `full:example.com` for an exact match.
+
+## Using the config
+
+`r-domestic.json` is a ready-made routing config for clients that support this format. The `Geositeurl` field points to the `geosite.dat` in this repository:
+
+```json
+"Geositeurl": "https://raw.githubusercontent.com/Dmitriy9000/russia-minimal-geosite/main/geosite.dat"
+```
+
+Import it into your client (e.g. NekoBox → Profiles → Import) and the client will fetch the latest `geosite.dat` automatically.
+
+## License
+
+MIT — see [LICENSE](LICENSE).

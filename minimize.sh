@@ -9,8 +9,8 @@ rm -rf ./extracted
 rm -rf ./categories
 mkdir extracted
 mkdir categories
-rm ./dlc.dat
-rm ./geosite.dat
+rm -f ./dlc.dat
+rm -f ./geosite.dat
 
 echo "=== Downloading latest geosite.dat..."
 curl -L -o "$OUTPUT_FILE" "$URL"
